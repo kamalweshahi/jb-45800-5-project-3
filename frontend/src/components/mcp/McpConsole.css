@@ -1,0 +1,5 @@
+.chips { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0 18px; }
+.chips button { background: #e6f1f6; color: #17627a; }
+.mcp-answer .markdown { margin-top: 24px; padding: 24px; border-radius: 18px; }
+.mcp-answer .markdown p { margin: 0; color: #334155; font-size: 1.05rem; line-height: 1.75; }
+.mcp-answer .markdown p:first-child::before { content: "Voyanta insight"; display: block; width: fit-content; margin-bottom: 12px; padding: 5px 10px; border-radius: 999px; background: rgba(13,148,136,.1); color: #0f766e; font-size: .76rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }

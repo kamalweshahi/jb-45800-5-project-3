@@ -1,0 +1,26 @@
+.vacation-card { overflow: hidden; background: #fff; border-radius: 25px; border: 1px solid #dbe7ec; box-shadow: 0 17px 46px rgba(17,61,80,.1); display: flex; flex-direction: column; min-width: 0; }
+.card-image-wrap { position: relative; min-height: 230px; overflow: hidden; background: #dce8ee; }
+.card-image-wrap img { width: 100%; height: 230px; object-fit: cover; display: block; transition: transform .35s ease; }
+.vacation-card:hover .card-image-wrap img { transform: scale(1.025); }
+.card-image-wrap::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(7,29,43,.05), rgba(7,29,43,.68)); pointer-events: none; }
+.status-badge { position: absolute; z-index: 2; top: 16px; right: 16px; padding: 7px 11px; border-radius: 999px; color: #fff; font-weight: 900; font-size: .78rem; backdrop-filter: blur(8px); }
+.status-badge.upcoming { background: rgba(8,125,169,.88); }
+.status-badge.active-now { background: rgba(20,145,87,.9); }
+.status-badge.ended { background: rgba(74,85,95,.85); }
+.image-title { position: absolute; z-index: 2; left: 18px; right: 18px; bottom: 17px; display: flex; align-items: center; gap: 8px; color: #fff; }
+.image-title h2 { margin: 0; font-size: 1.5rem; line-height: 1.15; text-shadow: 0 2px 16px rgba(0,0,0,.32); }
+.card-content { padding: 20px; display: flex; flex-direction: column; gap: 15px; flex: 1; }
+.trip-meta { display: grid; gap: 8px; color: #506c7c; font-size: .91rem; font-weight: 750; }
+.trip-meta > div { display: flex; align-items: center; gap: 8px; }
+.trip-meta svg { color: #0a91ad; flex: 0 0 auto; }
+.card-description { color: #4f6978; margin: 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.card-price-row { display: grid; grid-template-columns: auto 1fr; align-items: baseline; gap: 2px 8px; padding-top: 2px; }
+.card-price-row > span { color: #728792; font-size: .82rem; font-weight: 760; text-transform: uppercase; letter-spacing: .06em; }
+.card-price-row strong { grid-row: 1 / 3; grid-column: 2; justify-self: end; color: #0b789e; font-size: 1.65rem; line-height: 1; }
+.card-price-row small { color: #728792; }
+.card-actions { display: flex; gap: 9px; align-items: center; flex-wrap: wrap; margin-top: auto; padding-top: 3px; }
+.card-actions a { display: inline-flex; align-items: center; gap: 7px; background: #e3f1f4; color: #14627a; border-radius: 12px; padding: 10px 13px; font-weight: 850; }
+.card-actions .like-button { background: #e4f1f5; color: #15647d; }
+.card-actions .liked { background: #d9295f; color: #fff; }
+.card-actions button > span { min-width: 20px; padding: 1px 6px; border-radius: 999px; background: rgba(255,255,255,.22); }
+.likes-pill { display: inline-flex; align-items: center; gap: 7px; background: #fce7f0; color: #b91c55; border-radius: 999px; padding: 9px 12px; font-weight: 900; }

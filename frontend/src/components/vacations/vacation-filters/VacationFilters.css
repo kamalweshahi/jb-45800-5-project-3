@@ -1,0 +1,3 @@
+.filter-bar { display: flex; gap: 11px; flex-wrap: wrap; margin-bottom: 28px; }
+.filter-bar button { background: #e0eff3; color: #1e576c; }
+.filter-bar button.active { background: #087da9; color: #fff; }

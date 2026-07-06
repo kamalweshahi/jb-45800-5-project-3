@@ -1,0 +1,446 @@
+{
+  "info": {
+    "name": "Voyanta Vacations API",
+    "description": "Behavior-preserving Voyanta API collection. Run Login User or Login Admin first; their test scripts store the corresponding JWT collection variable automatically. All JSON responses use camelCase fields and errors use { message }.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api"
+    },
+    {
+      "key": "adminJwt",
+      "value": ""
+    },
+    {
+      "key": "userJwt",
+      "value": ""
+    },
+    {
+      "key": "vacationId",
+      "value": "1"
+    },
+    {
+      "key": "googleCredential",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.collectionVariables.set('adminJwt', json.jwt);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@voyanta.local\",\n  \"password\": \"Admin1234\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.collectionVariables.set('userJwt', json.jwt);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@voyanta.local\",\n  \"password\": \"User1234\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/auth/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"New\",\n  \"lastName\": \"Traveler\",\n  \"email\": \"new.traveler@example.com\",\n  \"password\": \"1234\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.collectionVariables.set('userJwt', json.jwt);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Current User",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userJwt}}"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": "{{baseUrl}}/auth/me"
+          }
+        },
+        {
+          "name": "Google Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/auth/google",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"credential\": \"{{googleCredential}}\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.collectionVariables.set('userJwt', json.jwt);"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Vacations",
+      "item": [
+        {
+          "name": "Get Vacations",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userJwt}}"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": "{{baseUrl}}/vacations?filter=all&limit=9&offset=0"
+          }
+        },
+        {
+          "name": "Get Vacation",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userJwt}}"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": "{{baseUrl}}/vacations/{{vacationId}}"
+          }
+        },
+        {
+          "name": "Toggle Like",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userJwt}}"
+                }
+              ]
+            },
+            "method": "POST",
+            "url": "{{baseUrl}}/vacations/{{vacationId}}/like"
+          }
+        },
+        {
+          "name": "Get Destinations",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userJwt}}"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": "{{baseUrl}}/vacations/destinations"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Create Vacation (multipart)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminJwt}}"
+                }
+              ]
+            },
+            "method": "POST",
+            "url": "{{baseUrl}}/vacations",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "destination",
+                  "value": "Barcelona, Spain",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Architecture, food markets, beaches and a relaxed Mediterranean city break.",
+                  "type": "text"
+                },
+                {
+                  "key": "startDate",
+                  "value": "2027-05-01",
+                  "type": "text"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2027-05-07",
+                  "type": "text"
+                },
+                {
+                  "key": "price",
+                  "value": "1890",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Vacation (multipart)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminJwt}}"
+                }
+              ]
+            },
+            "method": "PUT",
+            "url": "{{baseUrl}}/vacations/{{vacationId}}",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "destination",
+                  "value": "Updated Barcelona, Spain",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Architecture, food markets, beaches and a relaxed Mediterranean city break.",
+                  "type": "text"
+                },
+                {
+                  "key": "startDate",
+                  "value": "2027-05-01",
+                  "type": "text"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2027-05-07",
+                  "type": "text"
+                },
+                {
+                  "key": "price",
+                  "value": "1890",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": [],
+                  "disabled": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Vacation",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminJwt}}"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "url": "{{baseUrl}}/vacations/{{vacationId}}"
+          }
+        },
+        {
+          "name": "Likes Report",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminJwt}}"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": "{{baseUrl}}/reports/likes"
+          }
+        },
+        {
+          "name": "Download CSV",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminJwt}}"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": "{{baseUrl}}/reports/likes.csv"
+          }
+        }
+      ]
+    },
+    {
+      "name": "AI and MCP",
+      "item": [
+        {
+          "name": "AI Recommendation",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userJwt}}"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/ai/recommendation",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vacationId\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "MCP Question",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{userJwt}}"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/mcp/ask",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"question\": \"What is the average vacation price?\"\n}"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

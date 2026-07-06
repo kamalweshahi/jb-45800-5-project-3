@@ -1,0 +1,4 @@
+.vacation-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.scroll-sentinel { height: 12px; }
+@media (max-width: 1120px) { .vacation-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 760px) { .vacation-grid { grid-template-columns: 1fr; } }

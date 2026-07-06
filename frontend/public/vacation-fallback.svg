@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0f766e"/><stop offset="1" stop-color="#0ea5e9"/></linearGradient></defs>
+  <rect width="1200" height="760" fill="url(#g)"/>
+  <circle cx="940" cy="160" r="130" fill="#fff" opacity=".18"/>
+  <path d="M0 590 C230 420 410 660 650 500 C850 370 1010 520 1200 410 L1200 760 L0 760Z" fill="#fff" opacity=".2"/>
+  <path d="M0 650 C250 520 420 700 690 580 C900 490 1020 600 1200 520 L1200 760 L0 760Z" fill="#082f49" opacity=".28"/>
+  <text x="80" y="150" font-family="Arial, sans-serif" font-size="78" font-weight="700" fill="#fff">Voyanta</text>
+  <text x="84" y="220" font-family="Arial, sans-serif" font-size="34" fill="#e0f2fe">Your next escape</text>
+</svg>

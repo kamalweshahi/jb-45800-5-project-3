@@ -1,0 +1,80 @@
+services:
+  database:
+    build: ./database
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "1"
+      MYSQL_DATABASE: vacations_project
+      MYSQL_TCP_PORT: "3306"
+    expose:
+      - "3306"
+    volumes:
+      - vacations-mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  localstack:
+    image: localstack/localstack:4.4.0
+    environment:
+      SERVICES: s3
+      DEFAULT_REGION: us-east-1
+    ports:
+      - "4566:4566"
+      - "4510-4559:4510-4559"
+    volumes:
+      - ./database/localstack:/etc/localstack/init/ready.d:ro
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "awslocal s3api head-bucket --bucket vacation-images >/dev/null 2>&1",
+        ]
+      interval: 5s
+      timeout: 4s
+      retries: 20
+      start_period: 10s
+
+  backend:
+    build: ./backend
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: compose
+      VACATIONS_OPENAI_API_KEY: ${VACATIONS_OPENAI_API_KEY:-}
+      VACATIONS_OPENAI_MODEL: ${VACATIONS_OPENAI_MODEL:-gpt-4.1-mini}
+      VACATIONS_GOOGLE_CLIENT_ID: ${VACATIONS_GOOGLE_CLIENT_ID:-}
+      VACATIONS_JWT_KEY: ${VACATIONS_JWT_KEY:-vacation-secret}
+      VACATIONS_PASSWORD_KEY: ${VACATIONS_PASSWORD_KEY:-vacation-secret}
+      VACATIONS_CORS_ORIGIN: http://localhost:6123
+      VACATIONS_PUBLIC_BACKEND_URL: http://localhost:3000
+    volumes:
+      - vacation-upload-data:/app/uploads
+    depends_on:
+      database:
+        condition: service_healthy
+      localstack:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "-", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_GOOGLE_CLIENT_ID: ${VACATIONS_GOOGLE_CLIENT_ID:-}
+    ports:
+      - "6123:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  vacations-mysql-data:
+  vacation-upload-data:
